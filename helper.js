@@ -148,4 +148,22 @@ class Mat {
     static Mul4(a, b, c, d){
         return Mat.Mul2(Mat.Mul2(Mat.Mul2(a,b), c), d);
     }
+
+    static Mul_M_V(m, v){
+        const new_v = [0, 0, 0, 0];
+        new_v[0] = m.a11 * v[0] + m.a21 * v[1] + m.a31 * v[2] + m.a41 * v[3];
+        new_v[1] = m.a12 * v[0] + m.a22 * v[1] + m.a32 * v[2] + m.a42 * v[3];
+        new_v[2] = m.a13 * v[0] + m.a23 * v[1] + m.a33 * v[2] + m.a43 * v[3];
+        new_v[3] = m.a14 * v[0] + m.a24 * v[1] + m.a34 * v[2] + m.a44 * v[3];
+        return new_v;
+    }
+
+    static Mul_M_V_t(m, v){
+        const new_v = [0, 0, 0, 0];
+        new_v[0] = m.a11 * v[0] + m.a12 * v[1] + m.a13 * v[2] + m.a14 * v[3];
+        new_v[1] = m.a21 * v[0] + m.a22 * v[1] + m.a23 * v[2] + m.a24 * v[3];
+        new_v[2] = m.a31 * v[0] + m.a32 * v[1] + m.a33 * v[2] + m.a34 * v[3];
+        new_v[3] = m.a41 * v[0] + m.a42 * v[1] + m.a43 * v[2] + m.a44 * v[3];
+        return new_v;
+    }
 }
