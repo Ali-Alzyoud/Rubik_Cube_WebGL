@@ -33,6 +33,7 @@ function onStart() {
             const index = e.keyCode - ONE;
             r = index % 3;
             c = Math.floor(index / 3);
+            game.select(r, c);
         } else if (e.keyCode == ZERO) {
             r = -1;
             c = -1;

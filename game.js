@@ -50,10 +50,28 @@ class Game {
         this.angle = 0;
         this.next_angle = 0;
         this.count = 0;
+        this.r = 0;
+        this.c = 0;
 
         for (let i = 0; i < 27; i++) {
             this.drawCube(i);
         }
+
+        this.drawCubeSelection();
+
+    }
+
+    select(r, c) {
+        this.r = r;
+        this.c = c;
+
+        this.clean();
+
+        for (let i = 0; i < 27; i++) {
+            this.drawCube(i);
+        }
+
+        this.drawCubeSelection();
     }
 
     move(direction, r, c) {
@@ -77,6 +95,7 @@ class Game {
             for (let i = 0; i < 27; i++) {
                 this.drawCube(i);
             }
+            this.drawCubeSelection();
 
             let M;
             if (direction == Game.MOVE_DIRECTION.TOP || direction == Game.MOVE_DIRECTION.BOTTOM) {
@@ -178,7 +197,12 @@ class Game {
     }
 
     drawCube(index) {
-        this.setBufferData(index);
+        this.setBufferData(this.fullArray[index]);
+        this.draw();
+    }
+
+    drawCubeSelection() {
+        this.setBufferData(this.getVerticsArraySelection());
         this.draw();
     }
 
@@ -237,54 +261,55 @@ class Game {
         }
     }
 
-    getVerticsArray(scale, transform) {
+    getVerticsArray(scale, transform, isSelection) {
         const red = [1.0, 0.0, 0.0];
         const blue = [0.0, 0.0, 1.0];
         const green = [0.0, 1.0, 0.0];
         const yellow = [1.0, 1.0, 0.0];
         const orange = [1.0, 0.65, 0.0];
         const white = [1.0, 1.0, 1.0];
+        const gold = [1.0, 0.843, 0.0];
 
 
         const vertices = new Float32Array([
             // Positions        Colors
 
             //Back
-            ...Mat.Mul_M_V_t(transform, [-1.0 * scale, -1.0 * scale, -1.0 * scale, 1.0]), ...red,
-            ...Mat.Mul_M_V_t(transform, [+1.0 * scale, -1.0 * scale, -1.0 * scale, 1.0]), ...red,
-            ...Mat.Mul_M_V_t(transform, [+1.0 * scale, +1.0 * scale, -1.0 * scale, 1.0]), ...red,
-            ...Mat.Mul_M_V_t(transform, [-1.0 * scale, +1.0 * scale, -1.0 * scale, 1.0]), ...red,
+            ...Mat.Mul_M_V_t(transform, [-1.0 * scale, -1.0 * scale, -1.0 * scale, 1.0]), ...(isSelection ? gold : red),
+            ...Mat.Mul_M_V_t(transform, [+1.0 * scale, -1.0 * scale, -1.0 * scale, 1.0]), ...(isSelection ? gold : red),
+            ...Mat.Mul_M_V_t(transform, [+1.0 * scale, +1.0 * scale, -1.0 * scale, 1.0]), ...(isSelection ? gold : red),
+            ...Mat.Mul_M_V_t(transform, [-1.0 * scale, +1.0 * scale, -1.0 * scale, 1.0]), ...(isSelection ? gold : red),
 
             //Front
-            ...Mat.Mul_M_V_t(transform, [-1.0 * scale, -1.0 * scale, +1.0 * scale, 1.0]), ...blue,
-            ...Mat.Mul_M_V_t(transform, [+1.0 * scale, -1.0 * scale, +1.0 * scale, 1.0]), ...blue,
-            ...Mat.Mul_M_V_t(transform, [+1.0 * scale, +1.0 * scale, +1.0 * scale, 1.0]), ...blue,
-            ...Mat.Mul_M_V_t(transform, [-1.0 * scale, +1.0 * scale, +1.0 * scale, 1.0]), ...blue,
+            ...Mat.Mul_M_V_t(transform, [-1.0 * scale, -1.0 * scale, +1.0 * scale, 1.0]), ...(isSelection ? gold : blue),
+            ...Mat.Mul_M_V_t(transform, [+1.0 * scale, -1.0 * scale, +1.0 * scale, 1.0]), ...(isSelection ? gold : blue),
+            ...Mat.Mul_M_V_t(transform, [+1.0 * scale, +1.0 * scale, +1.0 * scale, 1.0]), ...(isSelection ? gold : blue),
+            ...Mat.Mul_M_V_t(transform, [-1.0 * scale, +1.0 * scale, +1.0 * scale, 1.0]), ...(isSelection ? gold : blue),
 
             //Top
-            ...Mat.Mul_M_V_t(transform, [-1.0 * scale, +1.0 * scale, -1.0 * scale, 1.0]), ...green,
-            ...Mat.Mul_M_V_t(transform, [+1.0 * scale, +1.0 * scale, -1.0 * scale, 1.0]), ...green,
-            ...Mat.Mul_M_V_t(transform, [+1.0 * scale, +1.0 * scale, +1.0 * scale, 1.0]), ...green,
-            ...Mat.Mul_M_V_t(transform, [-1.0 * scale, +1.0 * scale, +1.0 * scale, 1.0]), ...green,
+            ...Mat.Mul_M_V_t(transform, [-1.0 * scale, +1.0 * scale, -1.0 * scale, 1.0]), ...(isSelection ? gold : green),
+            ...Mat.Mul_M_V_t(transform, [+1.0 * scale, +1.0 * scale, -1.0 * scale, 1.0]), ...(isSelection ? gold : green),
+            ...Mat.Mul_M_V_t(transform, [+1.0 * scale, +1.0 * scale, +1.0 * scale, 1.0]), ...(isSelection ? gold : green),
+            ...Mat.Mul_M_V_t(transform, [-1.0 * scale, +1.0 * scale, +1.0 * scale, 1.0]), ...(isSelection ? gold : green),
 
             //Bottom
-            ...Mat.Mul_M_V_t(transform, [-1.0 * scale, -1.0 * scale, -1.0 * scale, 1.0]), ...white,
-            ...Mat.Mul_M_V_t(transform, [+1.0 * scale, -1.0 * scale, -1.0 * scale, 1.0]), ...white,
-            ...Mat.Mul_M_V_t(transform, [+1.0 * scale, -1.0 * scale, +1.0 * scale, 1.0]), ...white,
-            ...Mat.Mul_M_V_t(transform, [-1.0 * scale, -1.0 * scale, +1.0 * scale, 1.0]), ...white,
+            ...Mat.Mul_M_V_t(transform, [-1.0 * scale, -1.0 * scale, -1.0 * scale, 1.0]), ...(isSelection ? gold : white),
+            ...Mat.Mul_M_V_t(transform, [+1.0 * scale, -1.0 * scale, -1.0 * scale, 1.0]), ...(isSelection ? gold : white),
+            ...Mat.Mul_M_V_t(transform, [+1.0 * scale, -1.0 * scale, +1.0 * scale, 1.0]), ...(isSelection ? gold : white),
+            ...Mat.Mul_M_V_t(transform, [-1.0 * scale, -1.0 * scale, +1.0 * scale, 1.0]), ...(isSelection ? gold : white),
 
 
             //Left
-            ...Mat.Mul_M_V_t(transform, [-1.0 * scale, -1.0 * scale, -1.0 * scale, 1.0]), ...yellow,
-            ...Mat.Mul_M_V_t(transform, [-1.0 * scale, +1.0 * scale, -1.0 * scale, 1.0]), ...yellow,
-            ...Mat.Mul_M_V_t(transform, [-1.0 * scale, +1.0 * scale, +1.0 * scale, 1.0]), ...yellow,
-            ...Mat.Mul_M_V_t(transform, [-1.0 * scale, -1.0 * scale, +1.0 * scale, 1.0]), ...yellow,
+            ...Mat.Mul_M_V_t(transform, [-1.0 * scale, -1.0 * scale, -1.0 * scale, 1.0]), ...(isSelection ? gold : yellow),
+            ...Mat.Mul_M_V_t(transform, [-1.0 * scale, +1.0 * scale, -1.0 * scale, 1.0]), ...(isSelection ? gold : yellow),
+            ...Mat.Mul_M_V_t(transform, [-1.0 * scale, +1.0 * scale, +1.0 * scale, 1.0]), ...(isSelection ? gold : yellow),
+            ...Mat.Mul_M_V_t(transform, [-1.0 * scale, -1.0 * scale, +1.0 * scale, 1.0]), ...(isSelection ? gold : yellow),
 
             //Right
-            ...Mat.Mul_M_V_t(transform, [+1.0 * scale, -1.0 * scale, -1.0 * scale, 1.0]), ...orange,
-            ...Mat.Mul_M_V_t(transform, [+1.0 * scale, +1.0 * scale, -1.0 * scale, 1.0]), ...orange,
-            ...Mat.Mul_M_V_t(transform, [+1.0 * scale, +1.0 * scale, +1.0 * scale, 1.0]), ...orange,
-            ...Mat.Mul_M_V_t(transform, [+1.0 * scale, -1.0 * scale, +1.0 * scale, 1.0]), ...orange,
+            ...Mat.Mul_M_V_t(transform, [+1.0 * scale, -1.0 * scale, -1.0 * scale, 1.0]), ...(isSelection ? gold : orange),
+            ...Mat.Mul_M_V_t(transform, [+1.0 * scale, +1.0 * scale, -1.0 * scale, 1.0]), ...(isSelection ? gold : orange),
+            ...Mat.Mul_M_V_t(transform, [+1.0 * scale, +1.0 * scale, +1.0 * scale, 1.0]), ...(isSelection ? gold : orange),
+            ...Mat.Mul_M_V_t(transform, [+1.0 * scale, -1.0 * scale, +1.0 * scale, 1.0]), ...(isSelection ? gold : orange),
 
         ]);
         return vertices;
@@ -372,9 +397,14 @@ class Game {
         return full;
     }
 
-    setBufferData(index) {
+    getVerticsArraySelection() {
+        const M = Mat.Mat_translate(-0.5 + (2 - this.r) * 0.5, -0.5 + (2 - this.c) * 0.5, 1.0);
+        return this.getVerticsArray(0.10, M, true);
+    }
+
+    setBufferData(array) {
         const gl = this.gl;
-        const vertices = this.fullArray[index];
+        const vertices = array;
         const vertexBuffer = gl.createBuffer();
 
         const twoTri = (start) => {
