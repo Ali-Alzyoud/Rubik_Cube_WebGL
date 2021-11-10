@@ -2,6 +2,11 @@ window.onload = function () {
     onStart();
 };
 
+const MODE = {
+    SELECT: "SELECT",
+    MOVE: "MOVE",
+}
+
 function onStart() {
     const canvas = document.getElementById("gameCanvas");
     const game = new Game(canvas);
@@ -17,26 +22,65 @@ function onStart() {
 
     let r = 0;
     let c = 0;
+    let mode = MODE.SELECT;
+    let direction = null;
 
     window.addEventListener('keyup', (e) => {
+        direction = null;
         if (e.keyCode == LEFT) {
-            game.move(Game.MOVE_DIRECTION.LEFT, r, c);
+            if (mode == MODE.MOVE) {
+                direction = MOVE_DIRECTION.LEFT;
+            }
+            else {
+                c++;
+            }
         } else if (e.keyCode == RIGHT) {
-            game.move(Game.MOVE_DIRECTION.RIGHT, r, c);
+            if (mode == MODE.MOVE) {
+                direction = MOVE_DIRECTION.RIGHT;
+            }
+            else {
+                c--;
+            }
         } else if (e.keyCode == UP) {
-            game.move(Game.MOVE_DIRECTION.BOTTOM, r, c);
+            if (mode == MODE.MOVE) {
+                direction = MOVE_DIRECTION.UP;
+            } else {
+                r--;
+            }
         } else if (e.keyCode == DOWN) {
-            game.move(Game.MOVE_DIRECTION.TOP, r, c);
+            if (mode == MODE.MOVE) {
+                direction = MOVE_DIRECTION.DOWN;
+            } else {
+                r++
+            }
+        }
+        else {
+            if (mode == MODE.SELECT) {
+                mode = MODE.MOVE;
+            } else {
+                mode = MODE.SELECT;
+            }
         }
 
-        if (e.keyCode >= ONE && e.keyCode <= NINE) {
-            const index = e.keyCode - ONE;
-            r = index % 3;
-            c = Math.floor(index / 3);
+        if (direction) {
+            game.move(direction, r, c);
+        } else {
+            if (c > 2) {
+                game.move(MOVE_DIRECTION.RIGHT, -1, -1);
+                c = 0;
+            }
+            else if (c < 0) {
+                game.move(MOVE_DIRECTION.LEFT, -1, -1);
+                c = 2;
+            } else if (r > 2) {
+                game.move(MOVE_DIRECTION.DOWN, -1, -1);
+                r = 0;
+            }
+            else if (r < 0) {
+                game.move(MOVE_DIRECTION.UP, -1, -1);
+                r = 2;
+            }
             game.select(r, c);
-        } else if (e.keyCode == ZERO) {
-            r = -1;
-            c = -1;
         }
     })
 }

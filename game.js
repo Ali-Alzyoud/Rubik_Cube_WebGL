@@ -23,17 +23,19 @@ const FRAGMENT_SHADER_SRC =
     }
     `;
 
-class Game {
-    static MOVE_DIRECTION = {
-        LEFT: 0,
-        RIGHT: 1,
-        TOP: 2,
-        BOTTOM: 3,
+    const MOVE_DIRECTION = {
+        LEFT: "LEFT",
+        RIGHT: "RIGHT",
+        UP: "UP",
+        DOWN: "DOWN",
     };
-    static MOVE_TYPE = {
+
+    const MOVE_TYPE = {
         SECTOR: 0,
         SIDE: 1,
     };
+class Game {
+    
     constructor(canvas) {
         this.canvas = canvas;
         this.gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
@@ -77,7 +79,7 @@ class Game {
     move(direction, r, c) {
         if (this.interval) return;
 
-        if (direction == Game.MOVE_DIRECTION.LEFT || direction == Game.MOVE_DIRECTION.TOP) {
+        if (direction == MOVE_DIRECTION.LEFT || direction == MOVE_DIRECTION.UP) {
             this.next_angle = -Math.PI / 2;
         }
         else {
@@ -98,7 +100,7 @@ class Game {
             this.drawCubeSelection();
 
             let M;
-            if (direction == Game.MOVE_DIRECTION.TOP || direction == Game.MOVE_DIRECTION.BOTTOM) {
+            if (direction == MOVE_DIRECTION.UP || direction == MOVE_DIRECTION.DOWN) {
                 M = Mat.Mat_rotateX(this.next_angle / 10);
                 point = "Y";
             }
@@ -398,7 +400,7 @@ class Game {
     }
 
     getVerticsArraySelection() {
-        const M = Mat.Mat_translate(-0.5 + (2 - this.r) * 0.5, -0.5 + (2 - this.c) * 0.5, 1.0);
+        const M = Mat.Mat_translate(-0.5 + (2 - this.c) * 0.5, -0.5 + (2 - this.r) * 0.5, 1.0);
         return this.getVerticsArray(0.10, M, true);
     }
 
