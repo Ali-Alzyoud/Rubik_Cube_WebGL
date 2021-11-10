@@ -20,9 +20,14 @@ function onStart() {
     const ONE = 97;
     const NINE = 105;
 
+    const selectColor = [0.0, 0.0, 0.0];
+    const moveColor = [0.5, 0.5, 0.5];
+
     let r = 0;
     let c = 0;
     let mode = MODE.SELECT;
+    game.selectColor = selectColor;
+    game.redraw();
     let direction = null;
 
     window.addEventListener('keyup', (e) => {
@@ -57,8 +62,10 @@ function onStart() {
         else {
             if (mode == MODE.SELECT) {
                 mode = MODE.MOVE;
+                game.selectColor = moveColor;
             } else {
                 mode = MODE.SELECT;
+                game.selectColor = selectColor;
             }
         }
 
